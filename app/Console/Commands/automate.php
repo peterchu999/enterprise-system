@@ -56,7 +56,7 @@ class automate extends Command
                 $file->cleanDirectory('storage/app/public');
                 Artisan::call('backup:run --only-db');
                 $files = Storage::files('public')[0];
-                Mail::to("peter.andrew987@gmail.com")->send(new BackupMail(public_path($files),$time->toDateString()));
+                Mail::to("winston@wirasukses.com")->send(new BackupMail(public_path($files),$time->toDateString()));
                 echo "\n mail have been send ".storage_path('app/WirasuksesBackup')." \n";
                 DB::table('backup_counters')->where('id', 1)->update(['counter'=>$time]);
             }
