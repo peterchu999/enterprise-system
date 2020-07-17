@@ -46,22 +46,26 @@ class automate extends Command
     public function handle()
     {
         $time = Carbon::now('Asia/Jakarta');
+DB::table('backup_counters')->insert(['counter'=>$time]);
         $counter = DB::table('backup_counters')->where('id',1)->first();
-        if ($counter != null) {
-            $diff = $time->diffInHours($counter->counter);
-            if($diff >= 1){
-                Artisan::call('optimize');
+		Artisan::call('optimize');
                 Artisan::call('route:clear');
                 $file = new Filesystem;
                 $file->cleanDirectory('storage/app/public');
+		dd($file);
                 Artisan::call('backup:run --only-db');
                 $files = Storage::files('public')[0];
-                Mail::to("winston@wirasukses.com")->send(new BackupMail(public_path($files),$time->toDateString()));
+		echo $files;
+                
                 echo "\n mail have been send ".storage_path('app/WirasuksesBackup')." \n";
                 DB::table('backup_counters')->where('id', 1)->update(['counter'=>$time]);
+        if ($counter != null) {
+            $diff = $time->diffInHours($counter->counter);
+            if($diff >= 1){
+                
             }
         } else {
-            DB::table('backup_counters')->insert(['counter'=>$time]);
+            
         } 
         
     }
