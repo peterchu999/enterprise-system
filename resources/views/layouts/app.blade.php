@@ -56,6 +56,9 @@
                             @endif --}}
                         @else
                             <li class="nav-item">
+                                <a class="nav-link" target="_blank" href="{{ route('FAQ') }}">FAQ</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('Company.index') }}">Perusahaan</a>
                             </li>
                             <li class="nav-item">
@@ -63,7 +66,10 @@
                             </li>
                             @if(Auth::user()->role == "admin")
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('Admin.index') }}">Admin</a>
+                                <a class="nav-link" href="{{ route('Industry.index') }}">Industry</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('Admin.index') }}">Sales</a>
                             </li>
                             @endif
                             <li class="nav-item dropdown">

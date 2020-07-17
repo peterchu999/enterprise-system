@@ -18,6 +18,10 @@ class Company extends Model
         return $this->belongsTo('App\User','sales_id','id');
     }
 
+    public function Industry() {
+        return $this->belongsTo('App\Industry','company_industry','id');
+    }
+
     public function Offer()
     {
         return $this->hasMany('App\Offer');

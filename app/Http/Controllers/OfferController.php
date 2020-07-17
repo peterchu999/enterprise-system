@@ -22,7 +22,7 @@ class OfferController extends Controller
 
     public function update(UpdateOfferRequest $req, $id) {
         $offer = $this->service->updateOffer($req,$id);
-        return redirect()->route('Offer.show',$id)->with('success','data Laporan No. '.$id.' berhasil di ubah');
+        return redirect()->route('Offer.show',$id)->with('success','Data laporan berhasil di ubah');
     }
 
     public function editView($id) {
@@ -35,9 +35,14 @@ class OfferController extends Controller
         return view('Offer.index')->with(['offers'=>$data["offers"],'companies'=>$data["companies"],'sales'=>$data['sales']]);
     }
 
+    public function ppn($id) {
+        $this->service->updatePPN($id);
+        return redirect()->back();
+    }
+
     public function destroy($id) {
         $offer = $this->service->removeOffer($id);
-        return redirect()->route('Offer.index',$id)->with('success','data Laporan No. '.$id.' berhasil di hapus');
+        return redirect()->route('Offer.index',$id)->with('success','Data laporan berhasil di hapus');
     }
     
     public function show($id) {

@@ -29,7 +29,8 @@ class AppServiceProvider extends ServiceProvider
             'Company',
             'ContactPerson',
             'Offer',
-            'Product'
+            'Product',
+            'Industry'
         );
         foreach ($models as $model) {
             $this->app->bind('App\Repositories\\'.$model.'Repository','App\Repositories\Impl\\'.$model.'RepositoryImpl');

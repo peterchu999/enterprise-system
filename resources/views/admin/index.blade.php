@@ -41,14 +41,14 @@
                 {{$message}}
             </div>
         @endif
-    <div class="row d-flex align-items-center justify-content-center">
-        <h1 class="m-2 col">Admin Dashboard</h1>
-        <a class="btn btn-primary col   " href="{{route('register')}}">Create Sales</a>
+    <div class="row d-flex align-items-center justify-content-center mb-5">
+        <h1 class="m-2 col">Sales</h1>
+        <a class="btn btn-success col mx-2" href="{{route('Admin.restoreView')}}">Restore Sales</a>
+        <a class="btn btn-primary col" href="{{route('register')}}">Create Sales</a>
     </div>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th scope="col" style="text-align: left">No</th>
             <th scope="col">Nama Sales</th>
             <th scope="col">Email</th>
             <th scope="col">Action</th>
@@ -58,7 +58,6 @@
             @foreach ($users as $sales)
             @if($sales->role != "admin")
             <tr>
-                <th scope="row" style="text-align: left">{{ $loop->index + 1 }}</th>
                 <td>{{$sales->name}}</td>
                 <td>{{$sales->email}}</td>
                 <td> <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_sales" data-route="{{route('Admin.destroy',$sales->id)}}">Revoke Access</button></td>

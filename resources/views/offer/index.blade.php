@@ -53,13 +53,11 @@
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th scope="col" style="text-align: left" class="text-center">No</th>
             <th scope="col">Tanggal</th>
             <th scope="col">Customer</th>
             <th scope="col">Keterangan</th>
-            <th scope="col">Penawaran</th>
             <th scope="col">Status</th>
-            <th scope="col">PO</th>
+            <th scope="col">Action</th>
             @if(Auth::user()->role == "admin")
               <th scope="col">Sales</th>
             @endif
@@ -68,19 +66,17 @@
         <tbody>
             @foreach ($offers as $offer)
             <tr>
-                <th scope="row" style="text-align: left" class="text-center">{{ $offer->offer_number ?? " - "  }}</th>
-                <td>{{$offer->offer_date}}</td>
+                <td>{{date_format(date_create($offer->offer_date),'D, d-M-Y')}}</td>
                 <td> <a href="{{route('Company.show',$offer->Company->id)}}" class="text-dark">{{$offer->Company->company_name}} </a></td>
                 <td>
                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#information_modal" data-whatever="{{$offer->information}}">Informasi</button>
                 </td>
-              <td><a class="btn @if(count($offer->Product) > 0) btn-success @else btn-danger @endif"  href="{{route('Offer.show',$offer->id)}}">{{ count($offer->Product) > 0 ? count($offer->Product)." penawaran"  : "Belum ada" }}</a></td>
                 <td>
                     <span class='badge @if($offer->status == 1) badge-success @elseif($offer->status == 2) badge-warning @elseif($offer->status == 3) badge-danger @else badge-secondary  @endif'>
-                        @if($offer->status == 1) Sudah Deal @elseif($offer->status == 2) Waiting @elseif($offer->status == 3) Ditolak @else - @endif
+                        @if($offer->status == 1) PO @elseif($offer->status == 2) Waiting @elseif($offer->status == 3) Ditolak @else - @endif
                     </span>
                 </td>
-                <td>{{$offer->purchase_order == null ? "-" : $offer->purchase_order}}</td>
+                <td><a class="btn btn-success"  href="{{route('Offer.show',$offer->id)}}">Detail</a></td>
                 @if(Auth::user()->role == "admin")
                   <td>{{$offer->Sales->name}}</td>
                 @endif
@@ -124,8 +120,8 @@
                     <div class="col" id="status-container">
                         <label for="company_tel">status</label>
                         <select id="status" name="status" value="" class="selectpicker form-control" data-live-search="true" data-style="btn-outline-secondary">
-                          <option value="" disabled selected>pilih status</option>
-                          <option data-tokens="Sudah Deal" data-content="<span class='badge badge-success'>Sudah Deal</span>" value="1" @if(app('request')->input('status')==1) selected @endif >Sudah Deal</option>
+                          <option value="" disabled selected>Pilih status</option>
+                          <option data-tokens="PO" data-content="<span class='badge badge-success'>PO</span>" value="1" @if(app('request')->input('status')==1) selected @endif >PO</option>
                           <option data-tokens="Waiting" data-content="<span class='badge badge-warning'>Waiting</span>" value="2" @if(app('request')->input('status')==2) selected @endif>Waiting</option>
                           <option data-tokens="Ditolak" data-content="<span class='badge badge-danger'>Ditolak</span>" value="3" @if(app('request')->input('status')==3) selected @endif>Ditolak</option>
                           <option data-tokens="-" data-content="<span class='badge badge-secondary'>-</span>" value="4" @if(app('request')->input('status')==4) selected @endif>-</option>
@@ -203,9 +199,19 @@
             flag = false
         })
     }
+    const resetOption = (query,message = "Pilih ...") => {
+      $(query).val("");
+      $(query).parent().find('div.filter-option-inner-inner').html(message)
+    }
     $('button#button-reset').click(function(){
-      location.href = location.href.split("?")[0];
+      // location.href = location.href.split("?")[0];
+      resetOption('select#status',"Pilih status")
+      resetOption('select#company',"Pilih perusahaan")
+      resetOption('select#sales',"Pilih sales")
+      $('input#mulai').val(null);
+      $('input#sampai').val(null);
     })
+
     setBootstrapSelect('select#status');
     setBootstrapSelect('select#company');
     setBootstrapSelect('select#sales');

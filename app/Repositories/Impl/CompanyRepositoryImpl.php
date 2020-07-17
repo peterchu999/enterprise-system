@@ -38,7 +38,7 @@ class CompanyRepositoryImpl implements CompanyRepository
     }
 
     public function all($sales_id) {
-        return $this->model->where('sales_id',$sales_id)->get()->sortByDesc('created_at')->values();
+        return $this->model->with('Industry')->where('sales_id',$sales_id)->get()->sortByDesc('created_at')->values();
     }
 
     public function findByName($name) {
@@ -46,7 +46,7 @@ class CompanyRepositoryImpl implements CompanyRepository
     }
 
     public function allAdmin() {
-        return $this->model->all();
+        return $this->model->with('Industry')->get()->sortByDesc('created_at')->values();
     }
 
     public function find($id) {

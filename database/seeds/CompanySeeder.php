@@ -16,7 +16,7 @@ class CompanySeeder extends Seeder
             'company_address' => "Jalan bambu no 38",
             'company_tel' => "0909123444",
             'company_email' => null,
-            'company_industry' => "Drinks",
+            'company_industry' => 1,
             'sales_id' => null
         ]);
         DB::table('companies')->insert([
@@ -24,7 +24,7 @@ class CompanySeeder extends Seeder
             'company_address' => "Jalan bambu no 38",
             'company_tel' => "0909123444",
             'company_email' => null,
-            'company_industry' => "Drinks",
+            'company_industry' => 2,
             'sales_id' => null
         ]);
     }

@@ -41,7 +41,7 @@
             <div class="modal-body">
               <div class="row mb-3">
                   <div class="col">
-                      <label for="offer_date">Tanggal penawaran</label>
+                      <label for="offer_date">Tanggal Laporan</label>
                       <input type="date" id="offer_date" name="offer_date" class="form-control" placeholder="Nama Perusahaan" value="{{old('offer_date')}}" required>
                   </div>
                   <div class="col">
@@ -56,21 +56,6 @@
               </div>
               <div class="row mb-3">
                   <div class="col">
-                      <label for="purchase_order">Nomor purchase order</label>
-                      <input type="text" id="purchase_order" name="purchase_order" value="{{old('purchase_order')}}" class="form-control" placeholder="Boleh dikosongkan">
-                  </div>
-                  <div class="col" id="status-container">
-                      <label for="status">status</label>
-                      <select id="status" name="status" class="selectpicker form-control" data-live-search="true" data-style="btn-outline-secondary">
-                        <option value="" disabled selected>pilih status</option>
-                        <option data-tokens="Sudah Deal" data-content="<span class='badge badge-success'>Sudah Deal</span>" value="1" @if(old('status') == 1) selected @endif>Sudah Deal</option>
-                        <option data-tokens="Waiting" data-content="<span class='badge badge-warning'>Waiting</span>" value="2" @if(old('status') == 2) selected @endif >Waiting</option>
-                        <option data-tokens="Ditolak" data-content="<span class='badge badge-danger'>Ditolak</span>" value="3" @if(old('status') == 3) selected @endif >Ditolak</option>
-                      </select>
-                  </div>
-              </div>
-              <div class="row mb-3">
-                  <div class="col">
                       <label for="information">Keteragan</label>
                       <textarea class="form-control" id="information" name="information" rows="4" required>{{old('information')}}</textarea>
                   </div>
@@ -78,9 +63,17 @@
                 <div class="row mb-3">
                 <div class="col-12 mb-3 d-flex justify-content-between">
                     <label for="information">Penawaran</label>
-                    <button type="button" class="btn btn-secondary" id="add-item">klik untuk tambahkan kolom penawaran</button>
+                    <button type="button" class="btn btn-primary" id="add-item">klik untuk menambahkan penawaran</button>
                 </div>
               <div class="col-12" id="product-container">
+                  <div id="header-product-add">
+                            <div class="row d-flex mb-2 justify-content-between product-item" >
+                                <div class="col-5"> <h3>Nama Item</h3></div>
+                                <div class="col-1"> <h3>Qty</h3></div>
+                                <div class="col-3"> <h3>Price</h3></div>
+                                <div class="text-light px-3">Hapus kolom</div>
+                            </div>
+                        </div>
                     @if(old('product') != null)
                         @foreach (old('product') as $item)
                             <div class="row d-flex mb-2 justify-content-between product-item">
@@ -94,7 +87,7 @@
                 </div>
               </div>
             </div>
-            <button type="submit" id="btn-submit" class="btn btn-primary col-10 offset-1">Tambahkan penawaran</button>
+            <button type="submit" id="btn-submit" class="btn btn-success col-10 offset-1">Save</button>
         </form>
     </div>
 </div>
@@ -122,40 +115,65 @@
         })
     }
     setBootstrapSelect('select#status');
-    setBootstrapSelect('select#company')
+    setBootstrapSelect('select#company');
+    $(document).ready(function() {
+     if($('#product-container').children().length < 2){
+            $('#submit-add-button').hide();
+            $('#header-product-add').hide();
+        } else {
+            $('#submit-add-button').show();
+            $('#header-product-add').show();
+        }
+    })
     function deleteOnClick(item) {
         $(item).parent().remove();
-        if($('#product-container').children().length < 1) {
-            $('#status-container').hide()    
+        if($('#product-container').children().length < 2) {
+            $('#submit-add-button').hide(); 
+            $('#header-product-add').hide();
         } 
+    }
+    function priceHandler(dom){
+        value = dom.value;
+        length == null ? 0:length;
+        value = value.replace(/[.]/g,"");
+        length = value.length
+        value = value.split("");
+        if(length > 9) {
+            value.splice(length - 9,0,".")
+            length++;
+        } 
+        if(length > 6) {
+            value.splice(length - 6,0,".")
+            length++;
+        } 
+        if(length > 3) {
+            value.splice(length - 3,0,".");
+            length++;
+        } 
+        dom.value = value.join("")
+        length = dom.value.length
     }
     let generateTemplate = (obj = {name:"",qty:"",price:""}) => `
         <div class="row d-flex mb-2 justify-content-between product-item">
-            <input type="text" name="" data-name="name" value="${obj.name}" class="col-3 product_name" placeholder="Nama barang" required>
-            <input type="text" name="" data-name="qty" value="${obj.qty}" class="col-3 product_qty" placeholder="Kuantiti" required>
-            <input type="text" name="" data-name="price" value="${obj.price}" class="col-3 product_price" placeholder="Harga" required>
+            <input type="text" name="" data-name="name" value="${obj.name}" class="col-5 product_name" placeholder="Nama barang" required>
+            <input type="text" name="" data-name="qty" value="${obj.qty}" class="col-1 product_qty" placeholder="qty" required>
+            <input type="text" name="" data-name="price" oninput="priceHandler(this)" value="${obj.price}" class="col-3 product_price" placeholder="Harga" required>
             <button class="btn btn-danger" onclick="deleteOnClick(this)">Hapus kolom</button>
         </div>
     `
     $('button#add-item').click(function() {
-        $('#status-container').show()
+        $('#header-product-add').show();
         $('#product-container').append(generateTemplate())
-    })
-    $(document).ready(function() {
-        if($('#product-container').children().length < 1){
-            $('#status-container').hide();
-        } else {
-            $('#status-container').show();
-        }
     })
     $("form").submit(function(e){
         e.preventDefault();
         let items = $('div.row.d-flex.mb-2.justify-content-between.product-item')
         if (items.length > 0) {
             items.each(function(index){
-                $(this).find('input').each(function(){
+                $(this).find('input').each(function(idx,input){
                     let val = $(this).attr('data-name')
-                    $(this).attr('name',`product[${index}][${val}]`)
+                    if(val == "price") { input.value = input.value.replace(/[.]/g, ""); }
+                    $(this).attr('name',`product[${index-1}][${val}]`)
                 })
             })
         }
@@ -163,7 +181,6 @@
             $('#status-container').remove()
         } 
         this.submit()
-    });
-    
+    });  
 </script>
 @endsection

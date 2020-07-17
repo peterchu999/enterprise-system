@@ -28,10 +28,18 @@ class OfferServiceImpl implements OfferService
     public function insertOffer(Request $request) {
         $products = $request->product ?? [];
         if (count($products) > 0) {
-            $offer_number = OfferCounter::create(['name'=> Auth::user()->name]);
+            $offer_number = OfferCounter::create(['ppn'=> true]);
         }
         $offer = $this->buildOfferWith($request, $offer_number->id ?? null);
         return $this->repository->create($offer, $products);
+    }
+
+    public function updatePPN($id) {
+        $this->validateCredentialAndModelExist($id);
+        $offer = $this->repository->find($id);
+        $contact_number = $offer->OfferNumber()->first();
+        $contact_number->ppn = !$contact_number->ppn;
+        $contact_number->save();
     }
 
     public function updateOffer(Request $request,$id) {
@@ -76,8 +84,7 @@ class OfferServiceImpl implements OfferService
 
     private function buildOfferWith(Request $request, $offer_number = null) {
         return new Offer([
-            $request->offer_number ? 'offer_number' : 'undefined' => $request->offer_number,
-            $request->status ? 'status' : 'undefined' => $request->status,
+            $offer_number || $request->status ? 'status' : 'undefined' => $request->status ?? 2,
             $request->information ? 'information' : 'undefined' => $request->information,
             'sales_id' => Auth::user()->id,
             $request->company_id ? 'company_id' : 'undefined' => $request->company_id,

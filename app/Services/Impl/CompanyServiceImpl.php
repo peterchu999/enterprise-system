@@ -3,6 +3,7 @@ namespace App\Services\Impl;
 
 use Illuminate\Http\Request;
 use App\Repositories\CompanyRepository;
+use App\Repositories\IndustryRepository;
 use App\Services\CompanyService;
 use App\Http\Responses\Entity\BaseErrorResponse;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -14,10 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 class CompanyServiceImpl implements CompanyService
 {
-    protected $repository;
+    protected $repository,$industryRepository;
 
-    public function __construct(CompanyRepository $repository) {
+    public function __construct(CompanyRepository $repository, IndustryRepository $indRep) {
         $this->repository = $repository;
+        $this->industryRepository = $indRep;
     }
 
     public function insertCompany(Request $request) {
@@ -43,6 +45,10 @@ class CompanyServiceImpl implements CompanyService
         return $this->repository->all($sales->id);
     }
 
+    public function fetchAllIndustry() {
+        return $this->industryRepository->all();
+    }
+
     public function fetchCompany($id) {
         $this->validateCredentialAndModelExist($id);
         return $this->repository->find($id);
@@ -53,7 +59,62 @@ class CompanyServiceImpl implements CompanyService
         return $this->repository->remove($id);
     }
 
+    private function checkCompanyAddressPrefix(Request $request) {
+        if ($request->company_address) {
+            if(substr(strtoupper($request->company_address), 0, 3 ) === "JL.") {
+                $request->company_address = "JL. ".ucwords(substr($request->company_address,3));
+            } else if (substr(strtoupper($request->company_address), 0, 3 ) === "JLN") {
+                $request->company_address = "JL. ".ucwords(substr($request->company_address,3));
+            } else if (substr(strtoupper($request->company_address), 0, 4 ) === "JLN."){
+                $request->company_address = "JL. ".ucwords(substr($request->company_address,4));
+            } else if (substr(strtoupper($request->company_address), 0, 5 ) === "JALAN") {
+                $request->company_address = "JL. ".ucwords(substr($request->company_address,5));
+            } else if (substr(strtoupper($request->company_address), 0, 2 ) === "JL") {
+                $request->company_address = "JL. ".ucwords(substr($request->company_address,2));
+            } else {
+                $request->company_address = "JL. ".ucwords($request->company_address);
+            }
+        }
+    }
+
+    private function checkCompanyNamePrefix(Request $request) {
+        if($request->company_prefix) {
+            // if(substr(strtoupper($request->company_name), 0, 4 ) === "TOKO"){
+            //     $request->company_name = substr($request->company_name,4);
+            // } else if (substr(strtoupper($request->company_name), 0, 2 ) === "CV"){
+            //     $request->company_name = substr($request->company_name,2);
+            // } else if (substr(strtoupper($request->company_name), 0, 3 ) === "C.V"){
+            //     $request->company_name = substr($request->company_name,3);
+            // } else if (substr(strtoupper($request->company_name), 0, 4 ) === "C.V."){
+            //     $request->company_name = substr($request->company_name,4);
+            // } else if (substr(strtoupper($request->company_name), 0, 3 ) === "CV."){
+            //     $request->company_name = substr($request->company_name,3);
+            // } else if (substr(strtoupper($request->company_name), 0, 3 ) === "PT."){
+            //     $request->company_name = substr($request->company_name,3);
+            // } else if (substr(strtoupper($request->company_name), 0, 4 ) === "P.T."){
+            //     $request->company_name = substr($request->company_name,4);
+            // } else if (substr(strtoupper($request->company_name), 0, 3 ) === "P.T"){
+            //     $request->company_name = substr($request->company_name,3);
+            // } else if (substr(strtoupper($request->company_name), 0, 2 ) === "PT"){
+            //     $request->company_name = substr($request->company_name,2);
+            // } else if (substr(strtoupper($request->company_name), 0, 5 ) === "BAPAK"){
+            //     $request->company_name = substr($request->company_name,5);
+            // } else if (substr(strtoupper($request->company_name), 0, 5 ) === "BPK"){
+            //     $request->company_name = substr($request->company_name,5);
+            // } else if (substr(strtoupper($request->company_name), 0, 4 ) === "IBUH"){
+            //     $request->company_name = substr($request->company_name,4);
+            // } else if (substr(strtoupper($request->company_name), 0, 4 ) === "IBUK"){
+            //     $request->company_name = substr($request->company_name,4);
+            // } else if (substr(strtoupper($request->company_name), 0, 3 ) === "IBU"){
+            //     $request->company_name = substr($request->company_name,3);
+            // }
+            $request->company_name = $request->company_prefix." ".$request->company_name;
+        }
+    }
+
     private function buildCompanyWith(Request $request) {
+        $this->checkCompanyAddressPrefix($request);
+        $this->checkCompanyNamePrefix($request);
         return new Company([
             $request->company_address ? 'company_address' : 'not_defined' => $request->company_address,
             $request->company_tel ? 'company_tel' : 'not_defined' => $request->company_tel,
@@ -65,7 +126,7 @@ class CompanyServiceImpl implements CompanyService
     }
 
     public function checkCompanyWithName(Request $req) {
-        return $this->repository->findByName(strtoupper($req->company_name_check));
+        return $this->repository->findByName(strtoupper($req->company_prefix." ".$req->company_name_check));
     }
 
     private function validateCredentialAndModelExist($id) {

@@ -20,9 +20,10 @@ class CreateCompaniesTable extends Migration
             $table->string('company_address');
             $table->string('company_tel')->nullable();
             $table->string('company_email')->nullable();
-            $table->string('company_industry');
+            $table->bigInteger('company_industry')->unsigned()->nullable();
             $table->bigInteger('sales_id')->unsigned()->nullable();
             $table->foreign('sales_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('company_industry')->references('id')->on('industries')->onDelete('set null');
         });
     }
 

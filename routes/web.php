@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/check','CompanyController@checkCompanyAvail')->name('Company.check');
         Route::patch('/link/{id}','CompanyController@linkCompany')->name('Company.link');
     });
-    
+    Route::get('/FAQ', 'HomeController@FAQ')->name('FAQ');
     Route::group(['prefix' => '/contacts'], function () {
         Route::get('/', 'ContactPersonController@index')->name('ContactPerson.index');
         Route::post('/', 'ContactPersonController@store')->name('ContactPerson.store');
@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', 'OfferController@show')->name('Offer.show');
         Route::patch('/{id}', 'OfferController@update')->name('Offer.update');
         Route::delete('/{id}', 'OfferController@destroy')->name('Offer.destroy');
+        Route::get('/ppn/{id}', 'OfferController@ppn')->name('Offer.PPN');
     });
 
     Route::group(['prefix' => '/products'], function () {
@@ -52,7 +53,15 @@ Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::group(['prefix' => '/admin'], function () {
             Route::get('/', 'AdminController@index')->name('Admin.index');
+            Route::get('/restore', 'AdminController@restoreView')->name('Admin.restoreView');
+            Route::patch('/restore/{id}', 'AdminController@restore')->name('Admin.restore');
             Route::delete('/{id}', 'AdminController@destroy')->name('Admin.destroy');
+        });
+        Route::group(['prefix' => '/industries'], function () {
+            Route::post('/', 'IndustryController@store')->name('Industry.store');
+            Route::get('/', 'IndustryController@index')->name('Industry.index');
+            Route::delete('/{id}', 'IndustryController@destroy')->name('Industry.destroy');
+            Route::patch('/{id}', 'IndustryController@update')->name('Industry.update');
         });
     });
 });

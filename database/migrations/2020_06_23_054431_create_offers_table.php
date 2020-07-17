@@ -20,7 +20,7 @@ class CreateOffersTable extends Migration
             $table->string('information',300);
             $table->bigInteger('sales_id')->unsigned();
             $table->bigInteger('company_id')->unsigned();
-            $table->string('offer_date');
+            $table->datetime('offer_date');
             $table->string('purchase_order')->nullable();
             $table->bigInteger('offer_number')->unsigned()->nullable();
 

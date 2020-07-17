@@ -38,7 +38,8 @@ class CompanyController extends Controller
 
     public function index() {
         $companies = $this->service->fetchAllCompany();
-        return view('company.index')->with('companies',$companies);
+        $industries = $this->service->fetchAllIndustry();
+        return view('company.index')->with(['companies' => $companies, 'industries' => $industries]);
     }
 
     public function destroy($id) {
@@ -54,7 +55,7 @@ class CompanyController extends Controller
     public function checkCompanyAvail(Request $req) {
         $company = $this->service->checkCompanyWithName($req);
         $url = is_null($company) ? null : URL::signedRoute('Company.link', Crypt::encryptString($company->id));
-        return redirect()->back()->with(['check_company'=> $company ?? "NON" ,'req_company_name'=>$req->company_name_check, 'url_link' => $url]);
+        return redirect()->back()->with(['check_company'=> $company ?? "NON" ,'req_company_name'=>$req->company_name_check, 'url_link' => $url,'req_company_prefix'=>$req->company_prefix]);
     }
 
     public function linkCompany(Request $req, $id) {

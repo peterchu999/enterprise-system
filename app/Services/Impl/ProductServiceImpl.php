@@ -24,8 +24,9 @@ class ProductServiceImpl implements ProductService
         $product = $this->buildProductWith($request);
         $offer = Offer::where('id',$request->offer_id)->first();
         if($offer->offer_number == null) {
-            $offer_number = OfferCounter::create(['name'=>Auth::user()->name]);
+            $offer_number = OfferCounter::create(['ppn'=>true]);
             $offer->offer_number = $offer_number->id;
+            $offer->status = 2;
             $offer->save();
         }
         return $this->repository->createMany($product);
@@ -52,7 +53,6 @@ class ProductServiceImpl implements ProductService
     }
 
     private function buildProductWith(Request $request) {
-        // dd($request->all());
         if ($request->product != null){
             $product = $request->product;
             for($i = 0; $i < count($product);$i++) {
