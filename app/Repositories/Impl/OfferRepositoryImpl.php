@@ -38,7 +38,7 @@ class OfferRepositoryImpl implements OfferRepository
         $this->model->EndDateFilter($query["end"] ?? null, $query_builder);
         $this->model->StatusFilter($query["status"] ?? null, $query_builder);
         $this->model->CompanyFilter($query["company_id"] ?? null, $query_builder);
-        return $query_builder->orderBy('created_at', 'desc')->paginate(15);   
+        return $query_builder->orderBy('offer_date', 'desc')->paginate(15);   
     }
 
     public function find($id) {
