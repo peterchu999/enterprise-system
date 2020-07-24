@@ -24,7 +24,7 @@ class CompanyServiceImpl implements CompanyService
 
     public function insertCompany(Request $request) {
         $company = $this->buildCompanyWith($request);
-        return $this->repository->create($company);
+        return $this->repository->create($company,$request->contact_person,Auth::user()->id);
     }
 
     public function updateCompany(Request $request,$id) {
@@ -134,9 +134,19 @@ class CompanyServiceImpl implements CompanyService
             throw new ModelNotFound("Company with this id not found");
         } 
         $sales = Auth::user();
-        if (Company::where('id',$id)->first()->sales_id != $sales->id && $sales->role != "admin"){
-            $exception = new NotAuthorizeSales("User tidak memiliki akses");
-            throw $exception;   
+        $authorize = false;
+        $cmpyLinks = Company::where('id',$id)->first()->CompanyContactSales()->get();
+        if ($sales->role != "admin"){
+            foreach($cmpyLinks as $link){
+                if($link->sales_id == $sales->id){
+                    $authorize = true;
+                    break;
+                }
+            }
+            if(!$authorize){
+                $exception = new NotAuthorizeSales("User tidak memiliki akses");
+                throw $exception;
+            }
         }
     }
 }   

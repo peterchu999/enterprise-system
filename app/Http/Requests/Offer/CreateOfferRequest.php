@@ -16,6 +16,7 @@ class CreateOfferRequest extends BaseRequest
             'information' => 'string|min:5|required',
             'purchase_order' => 'string|nullable',
             'product' => 'array|min:1|nullable',
+            'no_penawaran' => 'exclude_if:product,null|numeric|unique:offer_counters,offer_number',
             'product.*' => 'array|min:3',
             'product.*.name' => 'string|min:3|required',
             'product.*.qty' => 'numeric|required',

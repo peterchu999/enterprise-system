@@ -38,38 +38,63 @@
                 <button class="btn btn-success " type="submit">Check</button>
             </div>
             </form>
-            @if(Session::get('check_company') == null)
-            @elseif(Session::get('check_company') == "NON")
-            <div class="alert alert-secondary col-10" role="alert">
-                <h4 class="p-0">Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> masih belum ada di database</h4>
-            </div>
-            @elseif(Session::get('check_company')->sales_id == null)
-            <div class="alert alert-warning col-10" role="alert">
-                <h4 class="p-0">Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> sudah ada di database namun tidak ada sales yang terhubung, klik tombol di bawah untuk menghubungkannya ke dalam company list kamu</h4>
-                <form action="{{Session::get('url_link')}}" method="POST">
-                    @csrf
-                    @method('patch')
-                    <input type="hidden" name="company_name" value="{{Session::get('req_company_prefix')." ".Session::get('check_company')->company_name}}" >
-                    <button type="submit" class="btn btn-primary">Link Company</button>
-                </form>
-            </div>
-            @elseif(Session::get('check_company')->sales_id == Auth::user()->id)
-            <div class="alert alert-success col-10" role="alert">
-                <h4>Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> sudah ada di database kamu</h4>
-            </div>
-            @elseif(Session::get('check_company')->sales_id != null)
-            <div class="alert alert-danger col-10" role="alert">
-                <h4>Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> sudah ada di database sales lain, hubungi admin bila ingin memasukkan company kedalam company list</h4>
-            </div>
-            @endif
-            @if($message = Session::get('success_link'))
-            <div class="alert alert-success col-10" role="alert">
-                <h4 class="my-0 py-0">{{$message}}</h4>
-            </div>
-            @elseif($message = Session::get('failed_link'))
-            <div class="alert alert-danger col-10" role="alert">
-                <h4 class="my-0 py-0">{{$message}}</h4>
-            </div>
+            @if(Session::get('check_status') == "NO_COMPANY")
+                <div class="alert alert-secondary col-10" role="alert">
+                    <h4 class="p-0">Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> masih belum ada di database</h4>
+                </div>
+            @elseif(Session::get('check_status') == "NO_LINKED_SALES")
+                <div class="alert alert-warning col-10" role="alert">
+                    <h4 class="p-0">Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> sudah ada di database namun tidak ada sales yang terhubung, klik tombol di bawah untuk menghubungkannya ke dalam company list kamu</h4>
+                    <form action="{{Session::get('url_link')}}" method="POST">
+                        @csrf
+                        @method('patch')
+                        <input type="hidden" name="company_name" value="{{Session::get('req_company_prefix')." ".Session::get('check_company')->company_name}}" >
+                        <button type="submit" class="btn btn-primary">Link Company</button>
+                    </form>
+                </div>
+            @elseif(Session::get('check_status') == "SALES_COMPANY")
+                <div class="alert alert-success col-10" role="alert">
+                    <h4>Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> sudah ada di database kamu</h4>
+                </div>
+            @elseif(Session::get('check_status') == "CANNOT_LINK_COMPANY")
+                <div class="alert alert-danger col-10" role="alert">
+                    <h4>Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> sudah ada di database sales lain, hubungi admin bila ingin memasukkan company kedalam company list</h4>
+                </div>
+            @elseif(Session::get('check_status') == "MAKE_WITH_CONTACT")
+                <div class="alert alert-info col-10" role="alert">
+                    <h4>Company dengan nama <b>{{Session::get('req_company_prefix')." ".Session::get('req_company_name')}}</b> bisa dihubungkan dengan membuat kontak baru</h4>
+                    <form action="{{route('ContactPerson.store')}}" method="POST">
+                        @csrf
+                        <input type="hidden" name="company_id" value="{{Session::get('check_company')->id}}">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="contact_person[name]">Nama Kontak</label>
+                                <input type="text" id="contact_person[name]" name="contact_person[name]" class="form-control" value="{{old('contact_person.name')}}" placeholder="Nama kontak" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="contact_person[email]">Email</label>
+                                <input type="email" id="contact_person[email]" name="contact_person[email]" class="form-control" value="{{old('contact_person.email')}}" placeholder="Email">
+                            </div>
+                            <div class="col">
+                                <label for="contact_person[phone]">No.telepon</label>
+                                <input type="tel" id="contact_person[phone]" name="contact_person[phone]" class="form-control" value="{{old('contact_person.phone')}}" placeholder="no telepon" pattern="[0-9]{10,14}" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="contact_person[phone]">Departemen</label>
+                                <input type="text" id="contact_person[department]" name="contact_person[department]" class="form-control" value="{{old('contact_person.department')}}" placeholder="Departemen" >
+                            </div>
+                            <div class="col">
+                                <label for="contact_person[email]">Jabatan</label>
+                                <input type="text" id="contact_person[position]" name="contact_person[position]" class="form-control" value="{{old('contact_person.position')}}" placeholder="Jabatan">
+                            </div>
+                        </div>
+                        <button class="btn btn-success">Link Perusahaan dengan Kontak</button>
+                    </form>
+                </div>
             @endif
         </div>
         <hr class="col-12 mb-3">
@@ -97,15 +122,15 @@
                 {{$message}}
             </div>
         @endif
-        <form class="col-10" action="{{ route('Company.store') }}" method="POST">
+        <form class="col-10" action="{{ route('Company.store') }}" method="POST" id="create_company_form">
             @csrf
             <div class="row mb-3">
                 <div class="col">
                     <label for="company_name">Nama Perusahaan</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <select name="company_prefix" id="">
-                                @if(Session::get('check_company') == "NON" && $selected = Session::get('req_company_prefix'))
+                            <select name="company_prefix" id="company_prefix_select">
+                                @if(Session::get('check_status') == "NO_COMPANY" && $selected = Session::get('req_company_prefix'))
                                     <option value="PT." @if($selected == "PT.") selected @endif>PT.</option>
                                     <option value="CV." @if($selected == "CV.") selected @endif>CV.</option>
                                     <option value="TOKO" @if($selected == "TOKO") selected @endif>TOKO</option>
@@ -120,14 +145,13 @@
                                 @endif
                             </select>
                         </div>
-                        @if(Session::get('check_company') == "NON")
+                        @if(Session::get('check_status') == "NO_COMPANY")
                             <input type="text" id="company_name" name="company_name" class="form-control is-valid" placeholder="Nama Perusahaan" value="{{Session::get('req_company_name')}}" required>
                         @else
                             <input type="text" id="company_name" name="company_name" class="form-control" placeholder="Nama Perusahaan" value="{{old('company_name')}}" required readonly>
                         @endif  
                     </div> 
                 </div>
-                {{-- {{dd($industries)}} --}}
                 <div class="col">
                     <label for="company_industry">Industri Perusahaan</label>
                     <select value="{{old('company_industry')}}" name="company_industry" id="company_industry" class="selectpicker form-control" data-live-search="true" data-style="btn-outline-secondary">
@@ -155,10 +179,60 @@
                         <div class="input-group-prepend">
                             <div class="input-group-text">JL.</div>
                         </div>
-                        <input type="text" id="company_address" name="company_address" class="form-control" value="{{old('company_address')}}" placeholder="Alamat Perusahaan">
+                        <textarea class="form-control" id="company_address" name="company_address" rows="4" required>{{old('company_address')}}</textarea>
                     </div>
                 </div>
             </div>
+            <div class="collapse 
+                @if(
+                Session::get('req_company_prefix')=="PT." ||
+                Session::get('req_company_prefix')=="CV." ||
+                Session::get('req_company_prefix')=="TOKO" ||
+                old('contact_person') != null
+                )show 
+                @endif">
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="contact_person[name]">Nama Kontak</label>
+                        <input type="text" id="contact_person[name]" name="contact_person[name]" class="form-control" value="{{old('contact_person.name')}}" placeholder="Nama kontak" 
+                            @if(
+                                Session::get('req_company_prefix')=="PT." ||
+                                Session::get('req_company_prefix')=="CV." ||
+                                Session::get('req_company_prefix')=="TOKO" ||
+                                old('contact_person') != null
+                                )required
+                            @endif>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="contact_person[phone]">No.telepon</label>
+                        <input type="tel" id="contact_person[phone]" name="contact_person[phone]" class="form-control" value="{{old('contact_person.phone')}}" placeholder="no telepon" pattern="[0-9]{10,14}" 
+                            @if(
+                                Session::get('req_company_prefix')=="PT." ||
+                                Session::get('req_company_prefix')=="CV." ||
+                                Session::get('req_company_prefix')=="TOKO" ||
+                                old('contact_person') != null
+                                )required
+                            @endif>
+                    </div>
+                    <div class="col">
+                        <label for="contact_person[email]">Email</label>
+                        <input type="email" id="contact_person[email]" name="contact_person[email]" class="form-control" value="{{old('contact_person.email')}}" placeholder="Email">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="contact_person[phone]">Departemen</label>
+                        <input type="text" id="contact_person[department]" name="contact_person[department]" class="form-control" value="{{old('contact_person.department')}}" placeholder="Departemen" >
+                    </div>
+                    <div class="col">
+                        <label for="contact_person[email]">Jabatan</label>
+                        <input type="text" id="contact_person[position]" name="contact_person[position]" class="form-control" value="{{old('contact_person.position')}}" placeholder="Jabatan">
+                    </div>
+                </div>
+            </div>
+            
             <div class="col d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">Tambahkan Perusahaan</button>
             </div>
@@ -304,13 +378,12 @@
 @endif
 <script>
     let datas = @json($companies);
-    let timeout = setTimeout(()=>{},1);
     console.log(datas);
+    let timeout = setTimeout(()=>{},1);
     let Cardcontainer =  document.querySelector('div.container-company-card')
     let baseRoute = window.location.href
     
     let generateCard =  (datas, template, query = "", container) => {
-        console.log('called');
         let stringHTML = ""
         let i = 0
         datas.forEach(data => {
@@ -435,5 +508,16 @@ $(document).ready(function(){
     }
     setBootstrapSelect('select#company_industry');
     setBootstrapSelect('select#company_industry_edit');
+
+    $(document).ready(function(){
+        $('#create_company_form').submit(function(e){
+            e.preventDefault()
+            let selection = $('select#company_prefix_select').val()
+            if(!(selection == "PT." || selection == "CV." || selection == "TOKO")){
+                $('input[name*="contact_person"]').parent().remove()
+            }
+            this.submit()
+        })
+    })
 </script>
 @endsection

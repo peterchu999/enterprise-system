@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="container-fluid">
     <div class="row justify-content-center">
         <h2 class="col-10">Detail Perusahaan</h2>
@@ -59,15 +62,25 @@
                         <label for="contact_person[name]">Nama Kontak</label>
                         <input type="text" id="contact_person[name]" name="contact_person[name]" class="form-control" value="{{old('contact_person.name')}}" placeholder="Nama kontak" required>
                     </div>
-                    <div class="col">
+                </div>
+                <div class="row mb-3">
+                     <div class="col">
                         <label for="contact_person[email]">Email</label>
-                        <input type="email" id="contact_person[email]" name="contact_person[email]" class="form-control" value="{{old('contact_person.email')}}" placeholder="Email" required>
+                        <input type="email" id="contact_person[email]" name="contact_person[email]" class="form-control" value="{{old('contact_person.email')}}" placeholder="Email">
+                    </div>
+                    <div class="col">
+                        <label for="contact_person[phone]">No.telepon</label>
+                        <input type="tel" id="contact_person[phone]" name="contact_person[phone]" class="form-control" value="{{old('contact_person.phone')}}" placeholder="no telepon" pattern="[0-9]{10,14}" required>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col">
-                        <label for="contact_person[phone]">No.telepon</label>
-                        <input type="tel" id="contact_person[phone]" name="contact_person[phone]" class="form-control" value="{{old('contact_person.phone')}}" placeholder="no telepon" pattern="[0-9]{10,14}" required>
+                        <label for="contact_person[phone]">Departemen</label>
+                        <input type="text" id="contact_person[department]" name="contact_person[department]" class="form-control" value="{{old('contact_person.department')}}" placeholder="Departemen" >
+                    </div>
+                    <div class="col">
+                        <label for="contact_person[email]">Jabatan</label>
+                        <input type="text" id="contact_person[position]" name="contact_person[position]" class="form-control" value="{{old('contact_person.position')}}" placeholder="Jabatan">
                     </div>
                 </div>
                 <button class="btn btn-primary">Tambahkan Kontak</button>
@@ -85,57 +98,46 @@
         <div class="col-10">
             <div class="row container-company-card">
                 @foreach($company->ContactPerson()->get() as $cp)
-                <div class="col-6">
-                    <div class="card bg-light mb-5 mx-auto">
-                        <div class="card-header d-flex justify-content-between">
-                            <b>{{$cp->name}}</b>
-                        </div>
-                        <div class="card-body">
-                            <a style="cursor:pointer" class="text-dark card-text d-block mb-3" target="_blank"  href="tel:{{$cp->phone}}">
-                                No. Tlpn :<b class="font-weight-bold"> {{$cp->phone ?? "-"}}</b>
-                            </a>
-                            <a style="cursor:pointer" class="text-dark card-text d-block" target="_blank"  href="mailto:{{$company->company_email}}">
-                                Email :<b class="font-weight-bold"> {{$cp->email ?? "-"}}</b>
-                            </a>
-                            @if(Auth::user()->role == "admin")
-                            <div class="d-flex justify-content-between w-100">
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#edit" data-whatever='{{$cp}}'>Edit</button>
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete" data-whatever='{{$cp}}'>Delete</button>
+                    @if( $cp->Sales()->first()->id == $user->id || $user->role == "admin")
+                    <div class="col-6">
+                        <div class="card bg-light mb-5 mx-auto">
+                            <div class="card-header d-flex justify-content-between">
+                                <b>{{$cp->name}}</b>
                             </div>
-                            @endif
+                            <div class="card-body">
+                                <a style="cursor:pointer" class="text-dark card-text d-block mb-3" target="_blank"  href="tel:{{$cp->phone}}">
+                                    No. Tlpn :<b class="font-weight-bold"> {{$cp->phone ?? "-"}}</b>
+                                </a>
+                                <a style="cursor:pointer" class="text-dark card-text d-block mb-3" target="_blank"  href="mailto:{{$company->company_email}}">
+                                    Email :<b class="font-weight-bold"> {{$cp->email ?? "-"}}</b>
+                                </a>
+                                @if(
+                                    substr($company->company_name, 0, 3) === "PT." || 
+                                    substr($company->company_name, 0, 3) === "CV."
+                                )
+                                <span class="text-dark card-text d-block mb-3" >
+                                    Departemen :<b class="font-weight-bold"> {{$cp->department ?? "-"}}</b>
+                                </span>
+                                <span class="text-dark card-text d-block">
+                                    Jabatan :<b class="font-weight-bold"> {{$cp->position ?? "-"}}</b>
+                                </span>
+                                @endif
+                                <div class="d-flex justify-content-between w-100">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#edit" data-whatever='{{$cp}}'>Edit</button>
+                                    @if(Auth::user()->role == "admin")
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete" data-whatever='{{$cp}}'>Delete</button>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> 
+                    </div> 
+                    @endif
                 @endforeach
             </div>
         </div>
     </div>
 </div>
-@if( Auth::user()->role == "admin")
-<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Menghapus kontak</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form action="{{ route('ContactPerson.destroy','xyz') }}}}" method="POST">
-          @method('delete')
-          @csrf
-          <div class="modal-body">
-              <h5 class="modal-message">Apakah kamu yakin untuk menghapus</h5>
-          </div>
-          <div class="modal-footer d-flex justify-content-between">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-              <button type="submit" class="btn btn-danger">Hapus</button>
-          </div>
-         </form>
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -174,6 +176,30 @@
         </div>
       </div>
     </div>
+@if( Auth::user()->role == "admin")
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Menghapus kontak</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{{ route('ContactPerson.destroy','xyz') }}}}" method="POST">
+          @method('delete')
+          @csrf
+          <div class="modal-body">
+              <h5 class="modal-message">Apakah kamu yakin untuk menghapus</h5>
+          </div>
+          <div class="modal-footer d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-danger">Hapus</button>
+          </div>
+         </form>
+      </div>
+    </div>
+  </div>
 <script>
     $(document).ready(function(){
         // delete modal

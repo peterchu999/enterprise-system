@@ -10,7 +10,7 @@
     'locale' => 'en',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
-    'key' => 'base64:Kn2GOR6DuSPMn8GEwoYPmHeCSnM0Pqu9Iga7hJDL41g=',
+    'key' => 'base64:H2z6JtIT9/vjuuHt2qm9bMP2OsJ3b2VrELEfLkooNx8=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
     array (
@@ -133,12 +133,12 @@
         array (
           'include' => 
           array (
-            0 => 'C:\\MAMP\\htdocs\\wirasukses-system',
+            0 => '/Applications/MAMP/htdocs/Information-System',
           ),
           'exclude' => 
           array (
-            0 => 'C:\\MAMP\\htdocs\\wirasukses-system\\vendor',
-            1 => 'C:\\MAMP\\htdocs\\wirasukses-system\\node_modules',
+            0 => '/Applications/MAMP/htdocs/Information-System/vendor',
+            1 => '/Applications/MAMP/htdocs/Information-System/node_modules',
           ),
           'follow_links' => false,
           'ignore_unreadable_directories' => false,
@@ -157,7 +157,7 @@
           0 => 'local',
         ),
       ),
-      'temporary_directory' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\app/backup-temp',
+      'temporary_directory' => '/Applications/MAMP/htdocs/Information-System/storage/app/backup-temp',
     ),
     'notifications' => 
     array (
@@ -291,7 +291,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\framework/cache/data',
+        'path' => '/Applications/MAMP/htdocs/Information-System/storage/framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -368,7 +368,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'information',
+        'database' => 'testing',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -378,16 +378,16 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'information',
+        'database' => 'testing',
         'username' => 'root',
-        'password' => 'kitacoba88',
+        'password' => 'root',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
         'prefix' => '',
         'dump' => 
         array (
-          'dump_binary_path' => 'C:\\MAMP\\bin\\mysql\\bin',
+          'dump_binary_path' => '/Applications/MAMP/Library/bin/',
         ),
         'prefix_indexes' => true,
         'strict' => true,
@@ -402,9 +402,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'information',
+        'database' => 'testing',
         'username' => 'root',
-        'password' => 'kitacoba88',
+        'password' => 'root',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -417,9 +417,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'information',
+        'database' => 'testing',
         'username' => 'root',
-        'password' => 'kitacoba88',
+        'password' => 'root',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -461,12 +461,12 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\app',
+        'root' => '/Applications/MAMP/htdocs/Information-System/storage/app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\app/public',
+        'root' => '/Applications/MAMP/htdocs/Information-System/storage/app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
@@ -483,7 +483,7 @@
     ),
     'links' => 
     array (
-      'C:\\MAMP\\htdocs\\wirasukses-system\\public\\storage' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\app/public',
+      '/Applications/MAMP/htdocs/Information-System/public/storage' => '/Applications/MAMP/htdocs/Information-System/storage/app/public',
     ),
   ),
   'hashing' => 
@@ -517,13 +517,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\logs/laravel.log',
+        'path' => '/Applications/MAMP/htdocs/Information-System/storage/logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\logs/laravel.log',
+        'path' => '/Applications/MAMP/htdocs/Information-System/storage/logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -573,7 +573,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\logs/laravel.log',
+        'path' => '/Applications/MAMP/htdocs/Information-System/storage/logs/laravel.log',
       ),
     ),
   ),
@@ -630,7 +630,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\MAMP\\htdocs\\wirasukses-system\\resources\\views/vendor/mail',
+        0 => '/Applications/MAMP/htdocs/Information-System/resources/views/vendor/mail',
       ),
     ),
   ),
@@ -709,7 +709,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\framework/sessions',
+    'files' => '/Applications/MAMP/htdocs/Information-System/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -729,9 +729,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\MAMP\\htdocs\\wirasukses-system\\resources\\views',
+      0 => '/Applications/MAMP/htdocs/Information-System/resources/views',
     ),
-    'compiled' => 'C:\\MAMP\\htdocs\\wirasukses-system\\storage\\framework\\views',
+    'compiled' => '/Applications/MAMP/htdocs/Information-System/storage/framework/views',
   ),
   'flare' => 
   array (

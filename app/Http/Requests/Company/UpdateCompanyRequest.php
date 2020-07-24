@@ -11,7 +11,7 @@ class UpdateCompanyRequest extends BaseRequest
     {
         return [
             'company_name' => 'string|min:2|starts_with:PT.,CV.,TOKO,BPK,IBU|unique:companies,company_name,'.$this->route('id'),
-            'company_tel' => ['regex:/^(^\+62\s?|^0)(\d{3,4}-?){2}\d{3,4}$/','nullable'],
+            'company_tel' => 'nullable',
             'company_email' => 'email|nullable',
             'company_industry' => 'exists:industries,id',
             'company_address' => 'string'

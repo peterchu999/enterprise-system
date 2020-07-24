@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -54,8 +55,30 @@ class CompanyController extends Controller
 
     public function checkCompanyAvail(Request $req) {
         $company = $this->service->checkCompanyWithName($req);
-        $url = is_null($company) ? null : URL::signedRoute('Company.link', Crypt::encryptString($company->id));
-        return redirect()->back()->with(['check_company'=> $company ?? "NON" ,'req_company_name'=>$req->company_name_check, 'url_link' => $url,'req_company_prefix'=>$req->company_prefix]);
+        
+        if ($company == null) {
+            return redirect()->back()->with(['check_status'=>'NO_COMPANY', 'req_company_name'=>strtoupper($req->company_name_check),'req_company_prefix'=>$req->company_prefix]);
+        }
+
+        if($company->CompanyContactSales()->count() < 1) {
+            $url = is_null($company) ? null : URL::signedRoute('Company.link', Crypt::encryptString($company->id));
+            return redirect()->back()->with(['check_status'=>'NO_LINKED_SALES','check_company'=> $company ?? "NON" ,'req_company_name'=>strtoupper($req->company_name_check), 'url_link' => $url,'req_company_prefix'=>$req->company_prefix]);
+        }
+
+        $authorized = false;
+        foreach($company->CompanyContactSales()->get() as $link){
+            if($link->sales_id == Auth::user()->id){
+                $authorized = true;
+                break;
+            }
+        }
+        if ($authorized) {
+            return redirect()->back()->with(['check_status'=>'SALES_COMPANY','check_company'=> $company,'req_company_name'=>strtoupper($req->company_name_check),'req_company_prefix'=>$req->company_prefix]);
+        }
+        if ($req->company_prefix == "IBU" || $req->company_prefix == "BPK"){
+            return redirect()->back()->with(['check_status'=>'CANNOT_LINK_COMPANY','check_company'=> $company,'req_company_name'=>strtoupper($req->company_name_check),'req_company_prefix'=>$req->company_prefix]);
+        }
+        return redirect()->back()->with(['check_status'=>'MAKE_WITH_CONTACT','check_company'=> $company,'req_company_name'=>strtoupper($req->company_name_check),'req_company_prefix'=>$req->company_prefix]);
     }
 
     public function linkCompany(Request $req, $id) {

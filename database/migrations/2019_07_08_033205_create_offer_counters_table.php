@@ -16,6 +16,7 @@ class CreateOfferCountersTable extends Migration
         Schema::create('offer_counters', function (Blueprint $table) {
             $table->id();
             $table->boolean('ppn');
+            $table->string('offer_number')->unique();
             $table->timestamps();
         });
     }

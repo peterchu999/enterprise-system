@@ -4,8 +4,7 @@ namespace App\Services\Impl;
 use Illuminate\Http\Request;
 use App\Repositories\ProductRepository;
 use App\Services\ProductService;
-use App\Http\Responses\Entity\BaseErrorResponse;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Exceptions\OfferNumberException;
 use App\Product;
 use App\Offer;
 use App\OfferCounter;
@@ -23,8 +22,12 @@ class ProductServiceImpl implements ProductService
     public function insertProduct(Request $request) {
         $product = $this->buildProductWith($request);
         $offer = Offer::where('id',$request->offer_id)->first();
+
         if($offer->offer_number == null) {
-            $offer_number = OfferCounter::create(['ppn'=>true]);
+            if(OfferCounter::where('offer_number',$request->no_penawaran)->count() > 0){
+                throw new OfferNumberException("No Penawaran sudah ada");
+            }
+            $offer_number = OfferCounter::create(['ppn'=>true, 'offer_number' => $request->no_penawaran]);
             $offer->offer_number = $offer_number->id;
             $offer->status = 2;
             $offer->save();
@@ -49,6 +52,7 @@ class ProductServiceImpl implements ProductService
 
     public function removeProduct($id) {
         $this->validateIfProductExist($id);
+        $this->validateStatus($id);
         return $this->repository->remove($id);
     }
 
@@ -68,12 +72,12 @@ class ProductServiceImpl implements ProductService
         ]);
     }
 
-    private function validateIfProductExist($id) {
-        if(!Product::where('id',$id)->exists()){
-            throw new HttpResponseException(
-                ( new BaseErrorResponse( 400, 
-                    'Contact person with this id:'.$id.' was not exist')
-                )->toResponse());
+    private function validateStatus($id) {
+        $product = Product::where('id',$id)->first();
+        $productCounter = Product::where('offer_id',$product->offer_id)->count();
+        if($productCounter < 2) {
+            $product->Offer->status = null;
+            $product->Offer->save();
         }
     }
 }   

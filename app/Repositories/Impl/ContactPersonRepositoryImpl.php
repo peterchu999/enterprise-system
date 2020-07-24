@@ -16,7 +16,7 @@ class ContactPersonRepositoryImpl implements ContactPersonRepository
     }
 
     public function create(ContactPerson $contact_person) {
-        $this->model->create($contact_person->getAttributes());
+        return $this->model->create($contact_person->getAttributes());
     }
 
     public function remove($id) {

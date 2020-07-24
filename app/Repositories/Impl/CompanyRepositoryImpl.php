@@ -15,8 +15,13 @@ class CompanyRepositoryImpl implements CompanyRepository
         $this->model = $company;
     }
 
-    public function create(Company $company) {
-        $this->model->create($company->getAttributes());
+    public function create(Company $company,$contact_person,$sales_id) {
+        $company = $this->model->create($company->getAttributes())->CompanyContactSales()->create([
+            'sales_id' => $sales_id
+        ]);
+        $cp_id = $contact_person ? $company->ContactPerson()->create($contact_person)->id : null;
+        $company->contact_person_id = $cp_id;
+        $company->save();
     }
 
     public function remove($id) {
@@ -38,7 +43,9 @@ class CompanyRepositoryImpl implements CompanyRepository
     }
 
     public function all($sales_id) {
-        return $this->model->with('Industry')->where('sales_id',$sales_id)->get()->sortByDesc('created_at')->values();
+        return $this->model->whereHas('CompanyContactSales', function ($query) use($sales_id){
+            $query->where('sales_id', $sales_id);
+        })->with(['Industry','Sales'])->get()->sortByDesc('created_at')->values();
     }
 
     public function findByName($name) {

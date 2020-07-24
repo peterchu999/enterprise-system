@@ -46,7 +46,7 @@
             </div>
             @if($offer->offer_number != null)
             <div class="row d-flex justify-content-between align-items-center">
-                <h1 class="mb-3 text-primary font-weight-bold col-6">No Penawaran: <b> {{$offer->offer_number ?? "-"}} </b> </h1>
+                <h1 class="mb-3 text-primary font-weight-bold col-6">No Penawaran: <b> {{$offer->OfferNumber()->first()->offer_number ?? "-"}} </b> </h1>
             </div>
             @endif
             <hr class="col-12">
@@ -80,7 +80,7 @@
                 @endif
             </div>
         </div>
-        <hr class="col-12">
+        <hr class="col-10">
         <div class="row col-10 d-flex justify-content-between">
             <h2 class="col-6">List item:</h2>
             <button type="button" class="btn btn-primary" id="add-item">Tambahkan Penawaran</button>
@@ -90,6 +90,12 @@
                 @csrf
                 <input type="hidden" name="offer_id" value="{{$offer->id}}">
                 <div class="row mb-3">
+                    @if($offer->offer_number == null)
+                    <div class="col mb-2" id="noPenawaranContainer">
+                        <label for="noPenwaran">Nomor Penawaran</label>
+                        <input type="text" id="noPenawaran" name="no_penawaran" class="form-control" placeholder="No.Penawaran" value="{{old('no_penawaran')}}" >
+                    </div>
+                    @endif
                     <div class="col-12 mb-2" id="product-container">
                         <div id="header-product-add">
                             <div class="row d-flex mb-2 justify-content-between product-item" >
@@ -379,9 +385,11 @@
         if($('#product-container').children().length < 2){
             $('#submit-add-button').hide();
             $('#header-product-add').hide();
+            $('#noPenawaranContainer').hide();
         } else {
             $('#submit-add-button').show();
             $('#header-product-add').show();
+            $('#noPenawaranContainer').show();
         }
     })
     function deleteOnClick(item) {
@@ -389,6 +397,7 @@
         if($('#product-container').children().length < 2) {
             $('#submit-add-button').hide(); 
             $('#header-product-add').hide();
+            $('#noPenawaranContainer').hide();
         } 
     }
     function priceHandler(dom){
@@ -423,6 +432,7 @@
     $('button#add-item').click(function() {
         $('#submit-add-button').show();
         $('#header-product-add').show();
+        $('#noPenawaranContainer').show();
         $('#product-container').append(generateTemplate())
     })
     $("form#product-add").submit(function(e){

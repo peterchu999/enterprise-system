@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Company;
 
 class CompanySeeder extends Seeder
 {
@@ -11,21 +12,19 @@ class CompanySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('companies')->insert([
-            'company_name' => "SHINTA VR",
-            'company_address' => "Jalan bambu no 38",
-            'company_tel' => "0909123444",
-            'company_email' => null,
+        $cmpy = Company::create([
+            'company_name'=>'hidenburg',
+            'company_address' => 'Jalan Chiga Selatan',
             'company_industry' => 1,
-            'sales_id' => null
+        ])->CompanyContactSales()->create([
+            'sales_id' => 1
         ]);
-        DB::table('companies')->insert([
-            'company_name' => "Kacha VR",
-            'company_address' => "Jalan bambu no 38",
-            'company_tel' => "0909123444",
-            'company_email' => null,
-            'company_industry' => 2,
-            'sales_id' => null
+        
+        $arg = $cmpy->ContactPerson()->create([
+            'name' => 'loremsan',
+            'phone' => '0888129324'
         ]);
+        $cmpy->contact_person_id = $arg->id;
+        $cmpy->save();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\CompanyContactSales;
 use ZipArchive;
 
 class AdminController extends Controller
@@ -23,7 +24,13 @@ class AdminController extends Controller
         return redirect()->route('Admin.index');
     }
     public function destroy($id) {
-        $user = User::where('id',$id)->first()->delete();
+        $user = User::where('id',$id)->first();
+        foreach(CompanyContactSales::where('sales_id', $user->id)->get() as $link){
+            $link->sales_id = null;
+            $link->save();
+        }
+        $user->CompanyContactSales();
+        $user->delete();
         return redirect()->back();
     }
 }

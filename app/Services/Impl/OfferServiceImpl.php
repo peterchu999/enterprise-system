@@ -28,7 +28,7 @@ class OfferServiceImpl implements OfferService
     public function insertOffer(Request $request) {
         $products = $request->product ?? [];
         if (count($products) > 0) {
-            $offer_number = OfferCounter::create(['ppn'=> true]);
+            $offer_number = OfferCounter::create(['ppn'=> true,'offer_number' => $request->no_penawaran ?? null ]);
         }
         $offer = $this->buildOfferWith($request, $offer_number->id ?? null);
         return $this->repository->create($offer, $products);

@@ -7,6 +7,7 @@ use App\Services\ContactPersonService;
 use App\Http\Responses\Entity\BaseErrorResponse;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\ContactPerson;
+use App\Company;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -20,7 +21,10 @@ class ContactPersonServiceImpl implements ContactPersonService
 
     public function insertContactPerson(Request $request) {
         $contact_person = $this->buildContactPersonWith($request);
-        return $this->repository->create($contact_person);
+        Company::where('id',$request->company_id)->first()->CompanyContactSales()->create([
+            'sales_id' => Auth::user()->id,
+            'contact_person_id' => $this->repository->create($contact_person)->id
+        ]);
     }
 
     public function updateContactPerson(Request $request,$id) {
@@ -45,10 +49,11 @@ class ContactPersonServiceImpl implements ContactPersonService
 
     private function buildContactPersonWith(Request $request) {
         return new ContactPerson([
-            $request->company_id ? 'company_id' : 'undefined' => $request->company_id,
             $request->contact_person["name"] ? 'name' : 'undefined' =>  strtoupper($request->contact_person["name"]),
             $request->contact_person["phone"] ? 'phone' : 'undefined' => $request->contact_person["phone"],
-            $request->contact_person["email"] ? 'email' : 'undefined' => $request->contact_person["email"]
+            $request->contact_person["email"] ? 'email' : 'undefined' => $request->contact_person["email"],
+            $request->contact_person["department"] ? 'department' : 'undefined' => $request->contact_person["department"],
+            $request->contact_person["position"] ? 'position' : 'undefined' => $request->contact_person["position"]
         ]);
     }
 
@@ -57,9 +62,19 @@ class ContactPersonServiceImpl implements ContactPersonService
             throw new ModelNotFound("Contact Person with this id not found");
         } 
         $sales = Auth::user();
-        if (ContactPerson::where('id',$id)->first()->sales_id != $sales->id && $sales->role != "admin"){
-            $exception = new NotAuthorizeSales("User tidak memiliki akses");
-            throw $exception;   
+        $authorize = false;
+        $contactLinks = ContactPerson::where('id',$id)->first()->CompanyContactSales()->get();
+        if ($sales->role != "admin"){
+            foreach($contactLinks as $link){
+                if($link->sales_id == $sales->id){
+                    $authorize = true;
+                    break;
+                }
+            }
+            if(!$authorize){
+                $exception = new NotAuthorizeSales("User tidak memiliki akses");
+                throw $exception;
+            }
         }
     }
 }   

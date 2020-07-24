@@ -19,7 +19,8 @@ class IndustrySeeder extends Seeder
             ['name' => 'PERUSAHAAN PAKAN TERNAK'],
             ['name' => 'PERUSAHAAN KONTRAKTOR'],
             ['name' => 'PERUSAHAAN SUPPLIER'],
-            ['name' => 'PERUSAHAAN ELEKTRONIK']
+            ['name' => 'PERUSAHAAN ELEKTRONIK'],
+            ['name' => 'GULA RAFINASI']
         ]);
     }
 }

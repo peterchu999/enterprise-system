@@ -56,7 +56,7 @@
               </div>
               <div class="row mb-3">
                   <div class="col">
-                      <label for="information">Keteragan</label>
+                      <label for="information">Keterangan</label>
                       <textarea class="form-control" id="information" name="information" rows="4" required>{{old('information')}}</textarea>
                   </div>
               </div>
@@ -67,7 +67,11 @@
                 </div>
               <div class="col-12" id="product-container">
                   <div id="header-product-add">
-                            <div class="row d-flex mb-2 justify-content-between product-item" >
+                        <div class="col mb-2">
+                            <label for="noPenwaran">Nomor Penawaran</label>
+                            <input type="text" id="noPenawaran" name="no_penawaran" class="form-control" placeholder="No.Penawaran" value="{{old('no_penawaran')}}" >
+                        </div>
+                        <div class="row d-flex my-2 justify-content-between" >
                                 <div class="col-5"> <h3>Nama Item</h3></div>
                                 <div class="col-1"> <h3>Qty</h3></div>
                                 <div class="col-3"> <h3>Price</h3></div>
@@ -176,6 +180,8 @@
                     $(this).attr('name',`product[${index-1}][${val}]`)
                 })
             })
+        } else {
+            $('#noPenawaran').remove()
         }
         if($('#status-container').is(":hidden")){
             $('#status-container').remove()

@@ -19,8 +19,8 @@ class CreateContactPeopleTable extends Migration
             $table->string('name');
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->bigInteger('company_id')->unsigned();
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+            $table->string('position')->nullable();
+            $table->string('department')->nullable();
         });
     }
 
