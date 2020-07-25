@@ -45,6 +45,7 @@ class automate extends Command
      */
     public function handle()
     {
+	Artisan::call('route:clear');
         $time = Carbon::now('Asia/Jakarta');
         $counter = DB::table('backup_counters')->where('id',1)->first();
         if ($counter != null) {
@@ -59,12 +60,12 @@ class automate extends Command
 		$files = storage_path().'\\app\\'.$files;
 		echo $files;
 		Mail::to("winston@wirasukses.com")->send(new BackupMail($files, $time->toDateString()));
-                echo "\n mail have been send ".storage_path('\app\backup')." \n";
+		Mail::to("peter.andrw987@gmail.com")->send(new BackupMail($files, $time->toDateString()));
 		DB::table('backup_counters')->where('id', 1)->update(['counter'=>$time]);
             }
         } else {
             DB::table('backup_counters')->insert(['counter'=>$time]);
         } 
-        echo "saiko";
+        
     }
 }
