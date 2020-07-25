@@ -24,7 +24,7 @@ class OfferNumberEditRequest extends FormRequest
     public function rules()
     {
         return [
-            'offer_number' => 'unique:offer_counters,offer_number'
+            'offer_number' => 'unique:offer_counters,offer_number'.dd("called")
         ];
     }
     public function messages()
