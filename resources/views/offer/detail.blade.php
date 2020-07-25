@@ -14,6 +14,12 @@
         vertical-align: middle;
         text-align: center;
     }
+    .w-150 {
+        width: 150px !important;
+    }
+    .w-80{
+        width: 80px !important;
+    }
 </style>
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -131,9 +137,9 @@
                 <tr>
                     <th scope="col" style="text-align: left">No</th>
                     <th scope="col">Nama Barang</th>
-                    <th scope="col">Kuantiti</th>
-                    <th scope="col">Harga</th>
-                    <th scope="col" colspan="3">Total</th>
+                    <th scope="col" class="w-80">Kuantiti</th>
+                    <th scope="col" class="w-150">Harga</th>
+                    <th scope="col" class="w-150" colspan="3">Total</th>
                     <th scope="col" style="width: 50px;">Action</th>
                 </tr>
                 </thead>
@@ -145,14 +151,14 @@
                     @foreach ($offer->Product as $product)
                     <tr>
                         <th scope="row" style="text-align: left">{{$loop->index + 1}}</th>
-                        <td class="text-left" style="max-width: 200px">{{$product->name}}</td>
-                        <td>{{$product->qty}}</td>
+                        <td class="text-left">{{$product->name}}</td>
+                        <td class="w-80">{{$product->qty}}</td>
                         @php
                             $total =  $product->qty * $product->price;
                             $totalCounter += $total;
                         @endphp
-                        <td class="text-right">{{number_format($product->price,0,',','.')}}</td>
-                        <td colspan="3" class="text-right">{{number_format($total,0,',','.')}}</td>
+                        <td class="text-right w-150">{{number_format($product->price,0,',','.')}}</td>
+                        <td colspan="3" class="text-right w-150">{{number_format($total,0,',','.')}}</td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger mb-2" data-toggle="modal" data-target="#delete_product" data-whatever="{{route('Product.destroy',$product->id)}}">Hapus</button>
                             <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit_product" data-whatever="{{$product}}" data-route="{{route('Product.update',$product->id)}}">Edit</button>
@@ -162,18 +168,18 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td class="bg-dark text-light" colspan="2">Total</td>
-                        <td class="bg-success text-light" colspan="4">Rp. {{number_format($totalCounter,0,',','.')}}</td>
+                        <td class="bg-dark text-light" colspan="4">Total</td>
+                        <td class="bg-success text-light text-right w-150" colspan="1">Rp. {{number_format($totalCounter,0,',','.')}}</td>
                     </tr>
                     @if($offer->offer_number != null)
                         @if($offer->OfferNumber()->first()->ppn == true)
                         <tr>
-                            <td class="bg-dark text-light" colspan="2">PPN 10%</td>
-                            <td class="bg-secondary text-light" colspan="4">Rp. {{number_format(($totalCounter * 10/100),0,',','.')}}</td>
+                            <td class="bg-dark text-light" colspan="4">PPN 10%</td>
+                            <td class="bg-secondary text-light text-right w-150" colspan="1">Rp. {{number_format(($totalCounter * 10/100),0,',','.')}}</td>
                         </tr>
                         <tr>
-                            <td class="bg-dark text-light" colspan="2">Grand Total</td>
-                            <td class="bg-success text-light" colspan="4">Rp. {{number_format(($totalCounter * 10/100) + $totalCounter,0,',','.')}}</td>
+                            <td class="bg-dark text-light" colspan="4">Grand Total</td>
+                            <td class="bg-success text-light w-150 text-right" colspan="1">Rp. {{number_format(($totalCounter * 10/100) + $totalCounter,0,',','.')}}</td>
                         </tr>
                         @endif
                     @endif
