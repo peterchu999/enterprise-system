@@ -65,6 +65,6 @@ class automate extends Command
         } else {
             DB::table('backup_counters')->insert(['counter'=>$time]);
         } 
-        
+        echo "saiko";
     }
 }

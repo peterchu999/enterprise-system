@@ -145,7 +145,7 @@
                     @foreach ($offer->Product as $product)
                     <tr>
                         <th scope="row" style="text-align: left">{{$loop->index + 1}}</th>
-                        <td>{{$product->name}}</td>
+                        <td class="text-left">{{$product->name}}</td>
                         <td>{{$product->qty}}</td>
                         @php
                             $total =  $product->qty * $product->price;

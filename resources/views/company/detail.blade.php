@@ -47,7 +47,7 @@
                     </a>
                 </h4>
                 <h4 class="mb-3 col-6">
-                    Industri : <b class="font-weight-bold">{{$company->company_industry}}</b>
+                    Industri : <b class="font-weight-bold">{{$company->Industry->name}}</b>
                 </h4>
             </div>
         </div>
