@@ -29,12 +29,12 @@ class Offer extends Model
 
     public function StartDateFilter($date, $query_builder)
     {
-        return $date == null ? $query_builder : $query_builder->where('offer_date','>',$date);
+        return $date == null ? $query_builder : $query_builder->where('offer_date','>=',$date);
     }
 
     public function EndDateFilter($date, $query_builder)
     {
-        return $date == null ? $query_builder : $query_builder->where('offer_date','<',$date);
+        return $date == null ? $query_builder : $query_builder->where('offer_date','<=',$date);
     }
 
     public function StatusFilter($status, $query_builder)

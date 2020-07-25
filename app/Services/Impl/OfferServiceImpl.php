@@ -82,6 +82,15 @@ class OfferServiceImpl implements OfferService
         return $this->repository->remove($id);
     }
 
+    public function editOfferNumber($id, Request $request) {
+        $offer = Offer::where('offer_number',$id)->first();
+        if($offer->sales_id == Auth::user()->id || Auth::user()->role == "admin"){
+            $offNum =  $offer->OfferNumber()->first();
+            $offNum->offer_number = $request->offer_number;
+            $offNum->save();
+        }
+    }
+
     private function buildOfferWith(Request $request, $offer_number = null) {
         return new Offer([
             $offer_number || $request->status ? 'status' : 'undefined' => $request->status ?? 2,

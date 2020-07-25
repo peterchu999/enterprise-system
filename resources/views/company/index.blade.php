@@ -11,6 +11,7 @@
         color: white;
     }
 </style>
+
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-10">
@@ -333,7 +334,7 @@
       </div>
     </div>
 <script>
-    let templateGenerator = (obj) => `
+    let templateGenerator = (obj, stringInjection = "") => `
         <div class="col-6">
             <div class="card bg-light mb-5 mx-auto">
                 <div class="card-header d-flex justify-contents-between">
@@ -342,8 +343,9 @@
                 <div class="card-body">
                     <p class="card-text">Email : ${obj.company_email ?? "-"}</p>
                     <p class="card-text">Phone : ${obj.company_tel ?? "-"}</p>
-                    <p class="card-text">Alamat : ${obj.company_address}</p>
+                    <p class="card-text">Alamat : <span style="display:inline-block; vertical-align:top">${obj.company_address}</span></p>
                     <p class="card-text">Industri : ${obj.industry == null  ? "-" : obj.industry.name}</p>
+                    ${stringInjection}
                     <div class="d-flex justify-content-between w-100">
                         <a class="btn btn-primary" href="${baseRoute+'/'+obj.id}">Lihat PIC</a>
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#edit" data-whatever='${JSON.stringify(obj)}'>Edit</button>
@@ -356,7 +358,7 @@
 </script>
 @else
 <script>
-    let templateGenerator = (obj) => `
+    let templateGenerator = (obj, inject = "") => `
         <div class="col-6">
             <div class="card bg-light mb-5 mx-auto">
                 <div class="card-header d-flex justify-contents-between">
@@ -365,7 +367,7 @@
                 <div class="card-body">
                     <p class="card-text">Email : ${obj.company_email ?? "-"}</p>
                     <p class="card-text">Phone : ${obj.company_tel ?? "-"}</p>
-                    <p class="card-text">Alamat : ${obj.company_address}</p>
+                    <p class="card-text">Alamat : <span style="display:inline-block; vertical-align:top">${obj.company_address}</span></p>
                     <p class="card-text">Industri : ${obj.industry == null  ? "-" : obj.industry.name}</p>
                     <div class="d-flex justify-content-between w-100">
                         <a class="btn btn-primary" href="${baseRoute+'/'+obj.id}">Lihat PIC</a>
@@ -378,11 +380,9 @@
 @endif
 <script>
     let datas = @json($companies);
-    console.log(datas);
     let timeout = setTimeout(()=>{},1);
     let Cardcontainer =  document.querySelector('div.container-company-card')
     let baseRoute = window.location.href
-    
     let generateCard =  (datas, template, query = "", container) => {
         let stringHTML = ""
         let i = 0
@@ -398,7 +398,22 @@
                 flag = true;
             }
             if(flag) {
-                stringHTML += template(data);
+                let injection = null
+                if (data.sales != null && data.sales.length > 0) {
+                    let sales = new Set(data.sales)
+                    let memo = {}
+                    injection = ""
+                    sales.forEach((item)=>{
+                        if (memo[item.name] == null){
+                            memo[item.name] = 1
+                            injection+=`<span class="badge badge-primary badge-pill mx-1">${ item.name}</span>`
+                        }
+                    })
+                }
+                injection = injection ?? "-"
+                injection = "<div class=\"mb-3\"><span>Sales : </span>" + injection + "</div>"
+                data.company_address = data.company_address.split("\n").join("<br>")
+                stringHTML += template(data, injection);
             }
             i++;
         })
@@ -486,7 +501,7 @@ $(document).ready(function(){
 </script>
 @endif
 <script>
-        $.fn.selectpicker.Constructor.BootstrapVersion = '4';
+    $.fn.selectpicker.Constructor.BootstrapVersion = '4';
     $('select#company_industry').selectpicker();
     $('select#company_industry_edit').selectpicker();
     function setBootstrapSelect (query){
@@ -518,6 +533,7 @@ $(document).ready(function(){
             }
             this.submit()
         })
+        
     })
 </script>
 @endsection

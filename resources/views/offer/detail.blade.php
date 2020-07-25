@@ -46,7 +46,9 @@
             </div>
             @if($offer->offer_number != null)
             <div class="row d-flex justify-content-between align-items-center">
-                <h1 class="mb-3 text-primary font-weight-bold col-6">No Penawaran: <b> {{$offer->OfferNumber()->first()->offer_number ?? "-"}} </b> </h1>
+                <h1 class="mb-3 text-primary font-weight-bold col-6">No Penawaran: <b> {{$offer->OfferNumber()->first()->offer_number ?? "-"}} </b> 
+                    <button data-toggle="modal" data-target="#edit_offer_number" class="btn btn-primary">Edit No.Penawaran</button> 
+                </h1>
             </div>
             @endif
             <hr class="col-12">
@@ -180,7 +182,37 @@
         </div>
         @endif
     </div>
+@if($offer->offer_number != null)
+<div class="modal fade" id="edit_offer_number" tabindex="-1" role="dialog" aria-labelledby="editOfferNumber" aria-hidden="true">
+    <input type="hidden" id="old_offer_number" value="{{old('offer_number') != null}}">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit No. Penawaran</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <form action="{{ route('OfferNumber.update',$offer->offer_number) }}" method="POST">
+        @method('patch')
+        @csrf
+        <div class="modal-body">
+            <div class="row">
+                <div class="col">
+                    <label for="offer_date">No Penawaran</label>
+                    <input type="text" id="offer_number" name="offer_number" class="form-control" placeholder="Nama Perusahaan" value="{{$offer->OfferNumber()->first()->offer_number}}" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </form>
+    </div>
+    </div>
 </div>
+@endif
 <div class="modal fade" id="delete_offer" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

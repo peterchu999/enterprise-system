@@ -23,6 +23,7 @@ class CompanyController extends Controller
     }
 
     public function store(CreateCompanyRequest $req) {
+        // dd($req->company_address);
         $this->service->insertCompany($req);
         return redirect()->back()->with('success','company '.$req->company_name.' berhasil di tambahkan');
     }

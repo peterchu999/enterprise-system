@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{id}', 'OfferController@update')->name('Offer.update');
         Route::delete('/{id}', 'OfferController@destroy')->name('Offer.destroy');
         Route::get('/ppn/{id}', 'OfferController@ppn')->name('Offer.PPN');
+        Route::patch('/number/{id}', 'OfferController@offerNumber')->name('OfferNumber.update');
     });
 
     Route::group(['prefix' => '/products'], function () {

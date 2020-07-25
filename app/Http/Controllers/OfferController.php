@@ -49,4 +49,9 @@ class OfferController extends Controller
         $data = $this->service->fetchOffer($id);
         return view('Offer.detail')->with(['offer'=>$data["offer"],'companies'=>$data["companies"]]);
     }
+
+    public function offerNumber($id, Request $req) {
+        $this->service->editOfferNumber($id, $req);
+        return redirect()->back()->with('success','No Penawaran berhasil di ganti');
+    }
 }
