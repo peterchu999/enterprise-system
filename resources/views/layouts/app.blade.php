@@ -24,6 +24,14 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-select.css') }}" rel="stylesheet">
+    <style>
+        li.nav-item > a.nav-link {
+            color:yellow !important;
+        }
+        li.nav-item > a.nav-link:hover {
+            color:teal !important;
+        }
+    </style>
 </head>
 <body>
     <div id="app">

@@ -151,8 +151,8 @@
                             $total =  $product->qty * $product->price;
                             $totalCounter += $total;
                         @endphp
-                        <td>{{number_format($product->price,0,',','.')}}</td>
-                        <td colspan="3">{{number_format($total,0,',','.')}}</td>
+                        <td class="text-right">{{number_format($product->price,0,',','.')}}</td>
+                        <td colspan="3" class="text-right">{{number_format($total,0,',','.')}}</td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger mb-2" data-toggle="modal" data-target="#delete_product" data-whatever="{{route('Product.destroy',$product->id)}}">Hapus</button>
                             <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit_product" data-whatever="{{$product}}" data-route="{{route('Product.update',$product->id)}}">Edit</button>
