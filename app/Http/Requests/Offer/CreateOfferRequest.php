@@ -23,4 +23,5 @@ class CreateOfferRequest extends BaseRequest
             'product.*.price' => 'numeric|required'
         ];
     }
+    
 }

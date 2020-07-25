@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Offer\CreateOfferRequest;
 use App\Http\Requests\Offer\UpdateOfferRequest;
+use App\Http\Requests\OfferNumberEditRequest;
 use App\Services\OfferService;
 
 class OfferController extends Controller
@@ -50,7 +51,7 @@ class OfferController extends Controller
         return view('Offer.detail')->with(['offer'=>$data["offer"],'companies'=>$data["companies"]]);
     }
 
-    public function offerNumber($id, Request $req) {
+    public function offerNumber($id, OfferNumberEditRequest $req) {
         $this->service->editOfferNumber($id, $req);
         return redirect()->back()->with('success','No Penawaran berhasil di ganti');
     }
