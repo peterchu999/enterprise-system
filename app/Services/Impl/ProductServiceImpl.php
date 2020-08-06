@@ -71,6 +71,17 @@ class ProductServiceImpl implements ProductService
             $request->offer_id ? 'offer_id' : 'undefined' => $request->offer_id
         ]);
     }
+    
+
+    private function validateIfProductExist($id) {
+        if(!Product::where('id',$id)->exists()){
+            throw new ModelNotFound("Offer with this id not found");
+        } 
+        // if (Product::where('id',$id)->first()->sales_id != Auth::user()->id && Auth::user()->role != "admin"){
+        //     $exception = new NotAuthorizeSales("User tidak memiliki akses");
+        //     throw $exception;   
+        // }
+    }
 
     private function validateStatus($id) {
         $product = Product::where('id',$id)->first();
