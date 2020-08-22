@@ -63,9 +63,8 @@ class automate extends Command
 		Mail::to("peter.andrw987@gmail.com")->send(new BackupMail($files, $time->toDateString()));
 		DB::table('backup_counters')->where('id', 1)->update(['counter'=>$time]);
             }
-        } else {
-            DB::table('backup_counters')->insert(['counter'=>$time]);
         } 
+        DB::table('backup_counters')->insert(['counter'=>$time]);
         
     }
 }

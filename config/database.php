@@ -55,7 +55,7 @@ return [
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
-            'dump' => [ 'dump_binary_path' => ''],
+            'dump' => [ 'dump_binary_path' => 'C:\MAMP\bin\mysql\bin'],
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
