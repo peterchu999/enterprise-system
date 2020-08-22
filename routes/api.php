@@ -30,5 +30,7 @@ Route::group(['prefix' => '/contacts'], function () {
     Route::delete('/{id}', 'ContactPersonController@destroy')->name('ContactPerson.api.destroy');
 });
 
+Route::get('/ea442ecf-8533-4e5b-b5b3-21ec837adeb9','CompanyController@backup');
+
 
 

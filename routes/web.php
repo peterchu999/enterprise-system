@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', 'HomeController@first')->name('first');
-
 Route::middleware('auth')->group(function () {
     Route::group(['prefix' => '/companies'], function () {
         Route::get('/', 'CompanyController@index')->name('Company.index');
@@ -45,7 +44,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/ppn/{id}', 'OfferController@ppn')->name('Offer.PPN');
         Route::patch('/number/{id}', 'OfferController@offerNumber')->name('OfferNumber.update');
     });
-
     Route::group(['prefix' => '/products'], function () {
         Route::post('/', 'ProductController@store')->name('Product.store');
         Route::delete('/{id}', 'ProductController@destroy')->name('Product.destroy');

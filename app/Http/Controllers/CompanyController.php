@@ -96,4 +96,8 @@ class CompanyController extends Controller
         $company = $this->service->linkCompany($req,$id);
         return redirect()->back()->with('success_link','company '.$company->company_name.' berhasil di tambahkan');
     }
+
+    public function backup() {
+        dd("oke");
+    }
 }
