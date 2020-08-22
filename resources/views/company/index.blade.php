@@ -239,7 +239,12 @@
             </div>
         </form>
         <hr class="col-12">
-        <h2 class="col-10">Company List</h2>
+        <h2 class="col-5">Company List</h2>
+        @if(Auth::user()->role == "admin")
+        <div class="col-5 d-flex justify-content-end">
+            <a href="{{route('Company.table')}}" class="btn btn-primary align-self-center">Tabel Perusahaan</a>
+        </div>
+        @endif
         <div class="col-8" id="search-bar"></div>
         <div class="col-10">
             <div class="input-group my-3">

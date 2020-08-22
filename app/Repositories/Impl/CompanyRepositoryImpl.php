@@ -45,7 +45,7 @@ class CompanyRepositoryImpl implements CompanyRepository
     public function all($sales_id) {
         return $this->model->whereHas('CompanyContactSales', function ($query) use($sales_id){
             $query->where('sales_id', $sales_id);
-        })->with('Industry')->get()->sortByDesc('created_at')->values();
+        })->with('Industry')->get()->sortByDesc('company_name')->values();
     }
 
     public function findByName($name) {
@@ -53,7 +53,7 @@ class CompanyRepositoryImpl implements CompanyRepository
     }
 
     public function allAdmin() {
-        return $this->model->with('Industry')->with('Sales')->get()->sortByDesc('created_at')->values();
+        return $this->model->with('Industry')->with('Sales')->get()->sortBy('company_name')->values();
     }
 
     public function find($id) {

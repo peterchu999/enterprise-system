@@ -28,6 +28,11 @@ class CompanyController extends Controller
         return redirect()->back()->with('success','company '.$req->company_name.' berhasil di tambahkan');
     }
 
+    public function table() {
+        $companies = $this->service->fetchAllCompany();
+        return view('company.table')->with(['companies' => $companies]);
+    }
+
     public function storeView() {
         $companies = $this->service->fetchAllCompany();
         return view('Offer.add')->with(['companies' => $companies]);

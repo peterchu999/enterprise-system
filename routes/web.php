@@ -17,6 +17,7 @@ Route::get('/', 'HomeController@first')->name('first');
 Route::middleware('auth')->group(function () {
     Route::group(['prefix' => '/companies'], function () {
         Route::get('/', 'CompanyController@index')->name('Company.index');
+        Route::get('/table', 'CompanyController@table')->name('Company.table');
         Route::post('/', 'CompanyController@store')->name('Company.store');
         Route::get('/{id}', 'CompanyController@show')->name('Company.show');
         Route::patch('/{id}', 'CompanyController@update')->name('Company.update');
