@@ -52,7 +52,7 @@
             </div>
         </div>
         <hr class="col-12">
-        <div class="collapse col-10 mb-4 @if($errors->any())show @endif" id="collapseForm">
+        <div class="collapse col-10 mb-4 @if($errors->any()) show @endif" id="collapseForm">
             <h2>Tambahkan Kontak</h2>
             <form action="{{route('ContactPerson.store')}}" method="POST">
                 @csrf
@@ -186,7 +186,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form action="{{ route('ContactPerson.destroy','xyz') }}}}" method="POST">
+        <form action="{{ route('ContactPerson.destroy','xyz') }}" method="POST">
           @method('delete')
           @csrf
           <div class="modal-body">
