@@ -45,26 +45,24 @@ class automate extends Command
      */
     public function handle()
     {
-	Artisan::call('route:clear');
+        Artisan::call('optimize');
+	    Artisan::call('route:clear');
         $time = Carbon::now('Asia/Jakarta');
-        $counter = DB::table('backup_counters')->where('id',1)->first();
+        $counter = DB::table('backup_counters')->where('id', 1)->first();
         if ($counter != null) {
-            $diff = $time->diffInHours($counter->counter);
-            if($diff >= 1){
-		Artisan::call('optimize');
-                Artisan::call('route:clear');
+            $diff = $time->diffInDays($counter->counter);
+            if($diff >= 4){
                 $file = new Filesystem;
                 $file->cleanDirectory('storage/app/backup');
                 Artisan::call('backup:run --only-db');
                 $files = Storage::files('backup')[0];
-		$files = storage_path().'\\app\\'.$files;
-		echo $files;
-		Mail::to("winston@wirasukses.com")->send(new BackupMail($files, $time->toDateString()));
-		Mail::to("peter.andrw987@gmail.com")->send(new BackupMail($files, $time->toDateString()));
-		DB::table('backup_counters')->where('id', 1)->update(['counter'=>$time]);
+                $files = storage_path().'\\app\\'.$files;
+                Mail::to("winston@wirasukses.com")->send(new BackupMail($files, $time->toDateString()));
+                Mail::to("peter.andrew987@gmail.com")->send(new BackupMail($files, $time->toDateString()));
+                DB::table('backup_counters')->where('id', 1)->update(['counter'=>$time]);
             }
-        } 
-        DB::table('backup_counters')->insert(['counter'=>$time]);
-        
+        } else {
+            DB::table('backup_counters')->insert(['counter'=>$time]);
+        }
     }
 }
