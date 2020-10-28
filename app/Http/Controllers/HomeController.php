@@ -33,6 +33,6 @@ class HomeController extends Controller
 
     public function first() {
         Artisan::call('automate');
-        return redirect('/home');
+        return view('FAQ');
     }
 }
