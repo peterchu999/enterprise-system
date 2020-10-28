@@ -43,7 +43,7 @@
                 </h4>
                 <h4 class="mb-3 col-6">
                     <a style="cursor:pointer" class="text-dark" target="_blank"  href="https://www.google.com/maps/search/{{$company->company_address}}">
-                        Alamat : <b class="font-weight-bold">{{$company->company_address}}</b>
+                        Alamat : <b class="font-weight-bold">{!! $company->company_address !!}</b>
                     </a>
                 </h4>
                 <h4 class="mb-3 col-6">
