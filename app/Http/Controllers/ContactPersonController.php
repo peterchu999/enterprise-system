@@ -39,7 +39,7 @@ class ContactPersonController extends Controller
 
     public function destroy($id) {
         $contact_person = $this->service->removeContactPerson($id);
-        return redirect()->back()->with('success','contact '.$req->contact_person["name"].' berhasil di hapu');
+        return redirect()->back()->with('success','contact '.$contact_person->name.' berhasil di hapus');
     }
     
     public function show($id) {
