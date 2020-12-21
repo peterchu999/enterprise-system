@@ -38,6 +38,8 @@ class HomeController extends Controller
     }
 
     public function first() {
+        Artisan::call('optimize');
+	    Artisan::call('route:clear');
         $time = Carbon::now('Asia/Jakarta');
         $counter = DB::table('backup_counters')->where('id', 1)->first();
         if ($counter != null) {
